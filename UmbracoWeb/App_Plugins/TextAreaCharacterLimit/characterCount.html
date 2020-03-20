@@ -1,0 +1,4 @@
+﻿<div ng-controller="TextArea.EditorController">
+    <textarea ng-controller="TextArea.EditorController" cols="100" ng-model="model.value" ng-trim="false" maxlength="{{model.config.maxChar}}" style="margin: 0px; width: 80%; height: 137px;"></textarea>
+    <p>{{model.config.maxChar - model.value.length }} characters left</p>
+</div>

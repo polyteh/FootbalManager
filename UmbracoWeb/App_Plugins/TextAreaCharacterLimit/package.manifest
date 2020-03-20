@@ -1,0 +1,26 @@
+﻿{
+    propertyEditors: [
+        {
+            alias: "TextArea.CharLimit",
+
+            name: "TextArea Character Limit",
+
+            editor: {
+                view: "~/App_Plugins/TextAreaCharacterLimit/characterCount.html"
+            },
+			prevalues: {
+            fields:[
+                {
+                   label: "Max character count",
+                   description: "Max character count",
+                   key: "maxChar",
+                   view: "number"
+                }            
+            ]
+        }
+        }
+    ]   ,
+	   javascript: [
+        "~/App_Plugins/TextAreaCharacterLimit/editor.controller.js"
+    ]
+}

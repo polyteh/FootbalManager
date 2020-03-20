@@ -1,0 +1,35 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<UmbracoWeb.Models.Player>
+@{
+    Layout = "masrter.cshtml";
+}
+
+@* the fun starts here *@
+
+<div>
+    <p>
+        @Model.GetProperty("playerName").Value()
+    </p>
+    <p>
+        @Model.Value("playerName")
+    </p>
+
+
+    @{
+        <p>As model property: @Model.StadiumName</p>
+
+
+
+        var stadiumName = Model.Value<string>("stadiumName", fallback: Fallback.ToAncestors);
+        <p>As value with fallback: @stadiumName</p>
+
+        @*var leagueName = Model.Value<string>("leagueName", fallback: Fallback.ToAncestors);
+            <p>@leagueName</p>
+
+            var noData = Model.Value<string>("noData", fallback: Fallback.ToAncestors);
+            <p>@noData</p>
+
+            var documentType = Model.IsDocumentType("player");
+            <p>@documentType</p>*@
+    }
+
+</div>

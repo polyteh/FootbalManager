@@ -1,0 +1,10 @@
+.maxlength-property-editor .value {
+  margin: 0 0 5px 0;
+}
+.maxlength-property-editor .value label {
+  display: inline-block;
+  width: 55px;
+}
+.maxlength-property-editor .value input {
+  display: inline-block;
+}

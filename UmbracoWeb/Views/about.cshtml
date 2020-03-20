@@ -1,0 +1,83 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage
+@{
+    Layout = "masrter.cshtml";
+}
+
+
+@{
+    var allTags = Umbraco.TagQuery.GetAllTags().Select(x => x.Text).ToList();
+}
+
+
+@foreach (var tag in allTags)
+{
+    var checkBoxId = "chk" + tag;
+    var tdId = "td" + tag;
+    <table width="50%">
+        <tr>
+            <td width="20px">
+                <input type="checkbox" id="@checkBoxId" class="chkclass" value="@tag" />
+            </td>
+            <td id="@tdId" width="100px">
+                @tag
+            </td>
+        </tr>
+    </table>
+
+}
+
+<div>
+    <input type="button" id="bttn_Click" value="Get content for tags" />
+</div>
+
+
+<div id="contentWithTags"></div>
+
+
+
+
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+
+
+<script type="text/javascript">
+
+    $('#bttn_Click').click(function () {
+
+
+        var val = [];
+        $(':checkbox:checked').each(function (i) {
+            val[i] = $(this).val();
+        });
+
+        console.log(val);
+
+        $.ajax({
+            type: "post",
+            url: "/umbraco/Surface/Tag/GetContentByTags",
+            data: { tags: val },
+            datatype: "json",
+            traditional: true,
+            success: function (data) {
+
+                console.log('in response', data);
+                var StrRes = "<ul>";
+                $.each(data, function (index, item) {
+                    StrRes += "<li>" + item + "</li>"
+                }                  
+                );
+                StrRes += "</ul>";
+                $("#contentWithTags").html(StrRes);
+                
+            }
+        });
+
+
+    });
+
+
+
+
+
+
+</script>
+

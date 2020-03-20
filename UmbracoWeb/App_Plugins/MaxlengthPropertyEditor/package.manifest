@@ -1,0 +1,35 @@
+{
+  "propertyEditors": [
+    {
+      "name": "Maxlength Property Editor",
+      "alias": "MaxlengthPropertyEditor",
+      "editor": {
+        "valueType": "JSON",
+        "view": "~/App_Plugins/MaxlengthPropertyEditor/views/maxlength.property.editor.html"
+      },
+      "prevalues": {
+        "fields": [
+          {
+            "description" : "Type of the field in mention. Textarea or Textfield",
+            "key"         : "fieldtype",
+            "label"       : "Fieldtype",
+            "view"        : "fieldtypeselector"
+          },
+          {
+            "description" : "Number of allowed characters",
+            "key"         : "nochars",
+            "label"       : "Characters",
+            "view"        : "number"
+          },
+        ]
+      }
+    }
+  ],
+  "css": [
+    "~/App_Plugins/MaxlengthPropertyEditor/css/maxlength.property.editor.css"
+  ],
+  "javascript": [
+    "~/App_Plugins/MaxlengthPropertyEditor/js/maxlength.property.editor.js"
+  ]
+}
+

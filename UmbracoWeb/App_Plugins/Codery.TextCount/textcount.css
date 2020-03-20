@@ -1,0 +1,15 @@
+﻿.codery__text-counter {
+    font-size: 12px;
+}
+
+.umb-multiple-textbox .textbox-wrapper .codery__text-counter {
+    width: 100%;
+}
+
+.codery__text-counter--warning {
+    color: #df7f48;
+}
+
+.codery__text-counter--error {
+    color: #9d261d;
+}

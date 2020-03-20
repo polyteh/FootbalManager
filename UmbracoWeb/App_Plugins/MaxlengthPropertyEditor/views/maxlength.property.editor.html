@@ -1,0 +1,10 @@
+<div ng-controller="MaxlengthPropertyEditorController" class="maxlength-property-editor">
+    <div class="value" ng-if="model.config.fieldtype == 'textfield'">
+        <input type="text" name="meta" ng-model="model.value" id="{{model.alias}}" class="umb-editor umb-textstring textstring" val-server="value" ng-required="model.validation.mandatory" ng-keyup="model.change()" />
+        <span class="help-inline"><strong>{{model.count}}</strong> characters left</span>
+    </div>
+    <div class="value" ng-if="model.config.fieldtype == 'textarea'">
+        <textarea ng-model="model.value" id="{{model.alias}}" name="meta" rows="10" class="umb-editor umb-textarea textstring" val-server="value" ng-keyup="model.change()"></textarea>
+        <span class="help-inline"><strong>{{model.count}}</strong> characters left</span>
+    </div>
+</div>

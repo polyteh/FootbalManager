@@ -1,0 +1,16 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoViewPage<Umbraco.Web.PublishedModels.Team>
+@{
+	Layout = "masrter.cshtml";
+}
+
+@* the fun starts here *@
+
+	<div>
+		@Model.Name
+	</div>
+	<div>
+		@Model.Value("StadiumName")
+	</div>
+
+
+
