@@ -334,14 +334,14 @@
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\TeamApiController.cs" />
     <Compile Include="Filters\ActionCORSFilter.cs" />
-    <Compile Include="Interfaces\IControllerServices.cs" />
+    <Compile Include="Interfaces\IControllerHelper.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerViewModel.cs" />
     <Compile Include="Models\TeamLabels.cs" />
     <Compile Include="Models\TeamNameViewModel.cs" />
     <Compile Include="Models\TeamViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\ServicesController.cs">
+    <Compile Include="Services\ControllerHelper.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>

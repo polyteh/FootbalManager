@@ -18,6 +18,8 @@ namespace UmbracoWeb.App_Start
         public void Compose(Composition composition)
         {
             GlobalConfiguration.Configuration.MapHttpAttributeRoutes();
+
+            //enable CORS
             GlobalConfiguration.Configuration.EnableCors(new EnableCorsAttribute("*", "*", "*"));
             composition.Register<PlayerViewModel>();
 
@@ -27,7 +29,7 @@ namespace UmbracoWeb.App_Start
             });
 
             composition.Register(c=>mapperConfig.CreateMapper());
-            composition.Register<IControllerServices, ServicesController>(Lifetime.Request);
+            composition.Register<IControllerHelper, ControllerHelper>(Lifetime.Request);
         }
     }
 }

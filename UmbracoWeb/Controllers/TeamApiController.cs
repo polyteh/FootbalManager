@@ -21,9 +21,9 @@ namespace UmbracoWeb.Controllers
         private readonly IContentService _contentService;
         private readonly IContentTypeService _contentTypeService;
         private readonly IMapper _mapper;
-        private readonly IControllerServices _controllerService;
+        private readonly IControllerHelper _controllerService;
         public TeamApiController(IContentService contentService, IContentTypeService contentTypeService, IMapper mapper,
-             IControllerServices controllerServices)
+             IControllerHelper controllerServices)
         {
             _contentService = contentService;
             _contentTypeService = contentTypeService;
@@ -39,115 +39,7 @@ namespace UmbracoWeb.Controllers
             return k.ToString();
         }
 
-        /// <summary>
-        /// Get all players from DB
-        /// </summary>
-        /// <param name="nodeId"></param>
-        /// <returns>List of players</returns>
-        [HttpGet]
-        [Route("Players/")]
-       
-        public IEnumerable<PlayerViewModel> GetAllPlayers()
-        {
-            //int nodeID = 2077; //Players content
 
-            // find root element of Team document type
-            int playersRootId = _controllerService.GetParentContentId(UmbracoAliasConfiguration.Player.Alias);
-
-            var playersContentById = Umbraco.Content(playersRootId);
-            if (!(_controllerService.IsContentNotNull(playersContentById)))
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-
-            IEnumerable<IPublishedContent> playersListContent = _controllerService.GetChildrensByAlias(playersContentById, UmbracoAliasConfiguration.Player.Alias);
-
-            if (playersListContent == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            List<PlayerViewModel> allPlayers = new List<PlayerViewModel>();
-            foreach (var player in playersListContent)
-            {
-                allPlayers.Add(new PlayerViewModel()
-                {
-                    Id=player.Id,
-                    Name = player.Value(UmbracoAliasConfiguration.Player.PlayerName).ToString(),
-                    Age = Int32.Parse(player.Value(UmbracoAliasConfiguration.Player.PlayerAge).ToString())
-                });
-                //Debug.WriteLine("New player");
-                //Debug.WriteLine(item.Value("PlayerName"));
-            }
-
-            return allPlayers;
-        }
-
-        /// <summary>
-        /// Get player by Id
-        /// </summary>
-        /// <exception cref="HttpResponseException">Not Found</exception>
-        /// <param name="nodeId">Player ID</param>
-        /// <returns>Player Model</returns>
-        [HttpGet]
-        [Route("GetPlayerById/{nodeId}")]
-       
-        public PlayerViewModel GetPlayerById(int nodeId)
-        {
-            //int nodeId = 2084; //Varan
-            if ((!_controllerService.IsNodeIdCorrect(nodeId)))
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest);
-            }
-
-            var playerContent = Umbraco.Content(nodeId);
-            var isP = playerContent.IsPublished();
-            // var parentInfo = playerContent.Parent;
-            if (!(_controllerService.IsContentNotNull(playerContent)))
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            var player = new PlayerViewModel()
-            {
-                Id=playerContent.Id,
-                Name = playerContent.Value(UmbracoAliasConfiguration.Player.PlayerName).ToString(),
-                Age = Int32.Parse(playerContent.Value(UmbracoAliasConfiguration.Player.PlayerAge).ToString())
-            };
-
-            return player;
-        }
-
-        /// <summary>
-        /// Add new player
-        /// </summary>
-        /// <param name="newPlayer"></param>
-        /// <returns>Player model, which was created</returns>
-        [HttpPost]
-        [Route("AddNewPlayer/")]
-       
-        public PlayerViewModel AddNewPlayer(PlayerViewModel newPlayer)
-        {
-            int nodeID = 2077;
-
-            //get node info to add in
-            var playersNodeName = Umbraco.Content(nodeID).Name;
-            var playersNodeGuid = Umbraco.Content(nodeID).Key;
-            GuidUdi currentPageUdi = new GuidUdi(playersNodeName, playersNodeGuid);
-
-            //create content node
-            var data = _contentService.CreateContent(playersNodeName, currentPageUdi, UmbracoAliasConfiguration.Player.Alias, 0);
-
-            //define properties
-            data.Name = newPlayer.Name;
-            data.SetValue(UmbracoAliasConfiguration.Player.PlayerName, newPlayer.Name);
-            data.SetValue(UmbracoAliasConfiguration.Player.PlayerAge, newPlayer.Age);
-
-            _contentService.SaveAndPublish(data);
-
-            return newPlayer;
-        }
 
         /// <summary>
         /// Add new player
@@ -192,16 +84,25 @@ namespace UmbracoWeb.Controllers
         [Route("Teams/")]    
         public IEnumerable<TeamViewModel> GetAllTeams()
         {
-            // find root element of Team document type
-            int teamsRootId = _controllerService.GetParentContentId(UmbracoAliasConfiguration.Team.Alias);
+            // find all root elements of Team document type
+            var teamsRootId = _controllerService.GetAllRootsId(UmbracoAliasConfiguration.Team.Alias);
 
-            //get all Teams child and get data from them List<TeamViewModel>
-            var teamsContent = Umbraco.Content(teamsRootId);
-            IEnumerable<IPublishedContent> teamsListContent = _controllerService.GetChildrensByAlias(teamsContent, UmbracoAliasConfiguration.Team.Alias);
+            if (teamsRootId==null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound);
+            }
+
+            List<IPublishedContent> teamListContent = new List<IPublishedContent>();
+
+            foreach (var teamRootItem in teamsRootId)
+            {
+                var teamContent = Umbraco.Content(teamRootItem);
+                teamListContent.AddRange(_controllerService.GetChildrensByAlias(teamContent, UmbracoAliasConfiguration.Team.Alias));
+            }
 
             //map data from IPublishedContent to the 
             List<TeamViewModel> allTeams = new List<TeamViewModel>();
-            foreach (var team in teamsListContent)
+            foreach (var team in teamListContent)
             {
                 allTeams.Add(new TeamViewModel()
                 {
@@ -215,9 +116,12 @@ namespace UmbracoWeb.Controllers
             return allTeams;
         }
 
+        /// <summary>
+        /// get team names for menu
+        /// </summary>
+        /// <returns>list of team names</returns>
         [HttpGet]
-        [Route("TeamNames/")]
-       
+        [Route("TeamNames/")]     
         public IEnumerable<TeamNameViewModel> GetAllTeamNames()
         {
             IEnumerable<TeamViewModel> fullTeamList = GetAllTeams();
@@ -250,12 +154,13 @@ namespace UmbracoWeb.Controllers
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
-            if (!teamPlayersContentById.HasValue(UmbracoAliasConfiguration.Team.Players))
+            if (teamPlayersContentById.Descendants().Where(x => x.IsDocumentType(UmbracoAliasConfiguration.Player.Alias)).FirstOrDefault()==null) 
             {
                 return new List<PlayerViewModel>();
             }
 
-            var teamPlayersContent = teamPlayersContentById.Value<IEnumerable<IPublishedContent>>(UmbracoAliasConfiguration.Team.Players).ToList();
+            var teamPlayersContent = teamPlayersContentById.Descendants().Where(x => x.IsDocumentType(UmbracoAliasConfiguration.Player.Alias));
+
 
             if (teamPlayersContent == null)
             {
@@ -279,10 +184,9 @@ namespace UmbracoWeb.Controllers
         /// Get team all info by Id
         /// </summary>
         /// <param name="nodeId"></param>
-        /// <returns></returns>
+        /// <returns>team view model</returns>
         [HttpGet]
-        [Route("GetTeamById/{nodeId}")]
-       
+        [Route("GetTeamById/{nodeId}")]      
         public TeamViewModel GetTeamById(int nodeId)
         {
             //int nodeID=2072; //ManCity content
@@ -306,7 +210,6 @@ namespace UmbracoWeb.Controllers
                 Players = GetTeamPlayers(nodeId).ToList()
 
             };
-
             return teamModel;
         }
     }
