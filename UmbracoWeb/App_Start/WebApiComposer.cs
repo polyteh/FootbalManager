@@ -7,7 +7,9 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
+using UmbracoWeb.Interfaces;
 using UmbracoWeb.Models;
+using UmbracoWeb.Services;
 
 namespace UmbracoWeb.App_Start
 {
@@ -25,6 +27,7 @@ namespace UmbracoWeb.App_Start
             });
 
             composition.Register(c=>mapperConfig.CreateMapper());
+            composition.Register<IControllerServices, ServicesController>(Lifetime.Request);
         }
     }
 }

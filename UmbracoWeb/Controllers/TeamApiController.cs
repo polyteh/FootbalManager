@@ -1,20 +1,16 @@
 ﻿using AutoMapper;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using Umbraco.Core;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Core.Services;
 using Umbraco.Web;
-using Umbraco.Web.Composing;
 using Umbraco.Web.WebApi;
 using UmbracoWeb.Configuration;
-using UmbracoWeb.Filters;
+using UmbracoWeb.Interfaces;
 using UmbracoWeb.Models;
 
 namespace UmbracoWeb.Controllers
@@ -25,11 +21,14 @@ namespace UmbracoWeb.Controllers
         private readonly IContentService _contentService;
         private readonly IContentTypeService _contentTypeService;
         private readonly IMapper _mapper;
-        public TeamApiController(IContentService contentService, IContentTypeService contentTypeService, IMapper mapper)
+        private readonly IControllerServices _controllerService;
+        public TeamApiController(IContentService contentService, IContentTypeService contentTypeService, IMapper mapper,
+             IControllerServices controllerServices)
         {
             _contentService = contentService;
             _contentTypeService = contentTypeService;
             _mapper = mapper;
+            _controllerService = controllerServices;
         }
 
         [HttpGet]
@@ -53,16 +52,16 @@ namespace UmbracoWeb.Controllers
             //int nodeID = 2077; //Players content
 
             // find root element of Team document type
-            int playersRootId = GetParentContentId(UmbracoAliasConfiguration.Player.Alias);
+            int playersRootId = _controllerService.GetParentContentId(UmbracoAliasConfiguration.Player.Alias);
 
             var playersContentById = Umbraco.Content(playersRootId);
-            if (!IsContentNotNull(playersContentById))
+            if (!(_controllerService.IsContentNotNull(playersContentById)))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
 
 
-            IEnumerable<IPublishedContent> playersListContent = GetChildrensByAlias(playersContentById, UmbracoAliasConfiguration.Player.Alias);
+            IEnumerable<IPublishedContent> playersListContent = _controllerService.GetChildrensByAlias(playersContentById, UmbracoAliasConfiguration.Player.Alias);
 
             if (playersListContent == null)
             {
@@ -97,7 +96,7 @@ namespace UmbracoWeb.Controllers
         public PlayerViewModel GetPlayerById(int nodeId)
         {
             //int nodeId = 2084; //Varan
-            if (!IsNodeIdCorrect(nodeId))
+            if ((!_controllerService.IsNodeIdCorrect(nodeId)))
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
@@ -105,7 +104,7 @@ namespace UmbracoWeb.Controllers
             var playerContent = Umbraco.Content(nodeId);
             var isP = playerContent.IsPublished();
             // var parentInfo = playerContent.Parent;
-            if (!IsContentNotNull(playerContent))
+            if (!(_controllerService.IsContentNotNull(playerContent)))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -194,11 +193,11 @@ namespace UmbracoWeb.Controllers
         public IEnumerable<TeamViewModel> GetAllTeams()
         {
             // find root element of Team document type
-            int teamsRootId = GetParentContentId(UmbracoAliasConfiguration.Team.Alias);
+            int teamsRootId = _controllerService.GetParentContentId(UmbracoAliasConfiguration.Team.Alias);
 
             //get all Teams child and get data from them List<TeamViewModel>
             var teamsContent = Umbraco.Content(teamsRootId);
-            IEnumerable<IPublishedContent> teamsListContent = GetChildrensByAlias(teamsContent, UmbracoAliasConfiguration.Team.Alias);
+            IEnumerable<IPublishedContent> teamsListContent = _controllerService.GetChildrensByAlias(teamsContent, UmbracoAliasConfiguration.Team.Alias);
 
             //map data from IPublishedContent to the 
             List<TeamViewModel> allTeams = new List<TeamViewModel>();
@@ -240,13 +239,13 @@ namespace UmbracoWeb.Controllers
         {
             //int nodeID = 2068; //Barcelona content
 
-            if (!IsNodeIdCorrect(nodeId))
+            if (!(_controllerService.IsNodeIdCorrect(nodeId)))
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             var teamPlayersContentById = Umbraco.Content(nodeId);
-            if (!IsContentNotNull(teamPlayersContentById))
+            if (!(_controllerService.IsContentNotNull(teamPlayersContentById)))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -288,13 +287,13 @@ namespace UmbracoWeb.Controllers
         {
             //int nodeID=2072; //ManCity content
             //int nodeID = 2068; //Barcelona content
-            if (!IsNodeIdCorrect(nodeId))
+            if (!(_controllerService.IsNodeIdCorrect(nodeId)))
             {
                 throw new HttpResponseException(HttpStatusCode.BadRequest);
             }
 
             var teamContent = Umbraco.Content(nodeId);
-            if (!IsContentNotNull(teamContent))
+            if (!(_controllerService.IsContentNotNull(teamContent)))
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound);
             }
@@ -309,62 +308,6 @@ namespace UmbracoWeb.Controllers
             };
 
             return teamModel;
-        }
-
-
-        /// <summary>
-        /// check, if nodeId is above zero
-        /// </summary>
-        /// <param name="nodeId"></param>
-        /// <returns></returns>
-        private bool IsNodeIdCorrect(int nodeId)
-        {
-            return nodeId > 0 ? true : false;
-        }
-
-        /// <summary>
-        /// check, if content with specified node exists
-        /// </summary>
-        /// <param name="content"></param>
-        /// <returns></returns>
-        private bool IsContentNotNull(IPublishedContent content)
-        {
-            return content != null ? true : false;
-        }
-
-        /// <summary>
-        /// select children from parent by alias
-        /// </summary>
-        /// <param name="parentContent"></param>
-        /// <param name="childrenAlias"></param>
-        /// <returns></returns>
-        private IEnumerable<IPublishedContent> GetChildrensByAlias(IPublishedContent parentContent, string childrenAlias)
-        {
-            IEnumerable<IPublishedContent> contentList = parentContent.Children;
-            if (contentList.Any() == true)
-            {
-                return contentList.Where(x => x.IsDocumentType(childrenAlias));
-            }
-            return null;
-        }
-
-        private int GetParentContentId(string childrenAlias)
-        {
-            var listOfRoots = Umbraco.ContentAtRoot();
-            int rootId = 0;
-            if (listOfRoots != null)
-            {
-                foreach (var root in listOfRoots)
-                {
-                    foreach (var item in root.Descendants().Where(x => x.IsDocumentType(childrenAlias)))
-                    {
-                        rootId = item.Parent.Id;
-                        // we asssume, that we have only one root element with Team document type, called Teams
-                        break;
-                    }
-                }
-            }
-            return rootId;
         }
     }
 }
