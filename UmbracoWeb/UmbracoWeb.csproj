@@ -329,12 +329,15 @@
     <Compile Include="App_Start\SwaggerComposer.cs" />
     <Compile Include="App_Start\WebApiComposer.cs" />
     <Compile Include="Configuration\UmbracoAliasConfiguration.cs" />
+    <Compile Include="Controllers\LeagueApiController.cs" />
     <Compile Include="Controllers\PlayerApiController.cs" />
     <Compile Include="Controllers\PlayerController.cs" />
     <Compile Include="Controllers\TagController.cs" />
     <Compile Include="Controllers\TeamApiController.cs" />
     <Compile Include="Filters\ActionCORSFilter.cs" />
     <Compile Include="Interfaces\IControllerHelper.cs" />
+    <Compile Include="Interfaces\IUmbracoHelper.cs" />
+    <Compile Include="Models\LeagueViewModel.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerViewModel.cs" />
     <Compile Include="Models\TeamLabels.cs" />
@@ -342,6 +345,12 @@
     <Compile Include="Models\TeamViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ControllerHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Services\UmbracoHelper.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Services\UmbracoHelperLeague.cs">
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
@@ -398,6 +407,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\Models\" />
+    <Folder Include="Views\LeagueApi\" />
     <Folder Include="Views\Player\" />
     <Folder Include="Views\Tag\" />
     <Folder Include="Views\TeamSurface\" />

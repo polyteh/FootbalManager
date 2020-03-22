@@ -30,6 +30,7 @@ namespace UmbracoWeb.App_Start
 
             composition.Register(c=>mapperConfig.CreateMapper());
             composition.Register<IControllerHelper, ControllerHelper>(Lifetime.Request);
+            composition.Register<IUmbracoHelper<LeagueViewModel,TeamViewModel>, UmbracoHelperLeague>();
         }
     }
 }

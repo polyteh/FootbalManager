@@ -267,7 +267,8 @@ namespace UmbracoWeb.App_Start
             swaggerDoc.paths = swaggerDoc
                 .paths
                 .Where(x => (x.Key.StartsWith("/api/footballmanager/team")) ||
-                (x.Key.StartsWith("/api/footballmanager/player")))
+                (x.Key.StartsWith("/api/footballmanager/player")) ||
+                (x.Key.StartsWith("/api/footballmanager/league")))
                 .ToDictionary(e => e.Key, e => e.Value);
         }
     }

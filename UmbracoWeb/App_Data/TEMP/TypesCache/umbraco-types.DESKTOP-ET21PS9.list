@@ -80,6 +80,7 @@ Umbraco.Core.Compose.RelateOnTrashComposer, Umbraco.Core, Version=8.0.0.0, Cultu
 Umbraco.Core.Services.Implement.KeyValueService+InitializeMigration, Umbraco.Core, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null
 Codery.TextCount.PropertyValueConverters.TextCountValueConverter, Codery.TextCount, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null
 Codery.TextCount.PropertyEditors.TextCountEditor, Codery.TextCount, Version=2.0.3.0, Culture=neutral, PublicKeyToken=null
+UmbracoWeb.Controllers.LeagueApiController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 UmbracoWeb.Controllers.PlayerApiController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 UmbracoWeb.Controllers.PlayerController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 UmbracoWeb.Controllers.TagController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
@@ -367,6 +368,7 @@ Umbraco.Web.Mvc.RenderMvcController, Umbraco.Web, Version=8.0.0.0, Culture=neutr
 
 Umbraco.Web.WebApi.UmbracoApiController
 
+UmbracoWeb.Controllers.LeagueApiController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 UmbracoWeb.Controllers.PlayerApiController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 UmbracoWeb.Controllers.TeamApiController, UmbracoWeb, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
 Umbraco.Web.HealthCheck.HealthCheckController, Umbraco.Web, Version=8.0.0.0, Culture=neutral, PublicKeyToken=null

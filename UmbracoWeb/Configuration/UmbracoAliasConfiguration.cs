@@ -21,6 +21,12 @@ namespace UmbracoWeb.Configuration
             public static readonly string TeamStadium = "stadiumName";
             public static readonly string Players = "Players";
         }
+        public static class League
+        {
+            public static readonly string Alias = "league";
+            public static readonly string LeagueName = "leagueName";
+
+        }
 
     }
 }
