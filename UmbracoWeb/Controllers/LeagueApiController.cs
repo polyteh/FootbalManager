@@ -21,9 +21,9 @@ namespace UmbracoWeb.Controllers
         private readonly IContentTypeService _contentTypeService;
         private readonly IMapper _mapper;
         private readonly IControllerHelper _controllerService;
-        private readonly IUmbracoHelper<LeagueViewModel,TeamViewModel> _umbracoLeagueHelper;
+        private readonly IUmbracoHelper<LeagueViewModel> _umbracoLeagueHelper;
         public LeagueApiController(IContentService contentService, IContentTypeService contentTypeService, IMapper mapper,
-            IControllerHelper controllerServices, IUmbracoHelper<LeagueViewModel, TeamViewModel> umbracoHelper)
+            IControllerHelper controllerServices, IUmbracoHelper<LeagueViewModel> umbracoHelper)
         {
             _contentService = contentService;
             _contentTypeService = contentTypeService;
@@ -31,46 +31,58 @@ namespace UmbracoWeb.Controllers
             _controllerService = controllerServices;
             _umbracoLeagueHelper = umbracoHelper;
         }
+        //[HttpGet]
+        //[Route("Leagues/")]
+        //public IEnumerable<LeagueViewModel> GetAllLeagues()
+        //{
+
+        //    // find Ids of root elements for League document type
+
+        //    var leaguesRoots = _controllerService.GetAllRootsId(UmbracoAliasConfiguration.League.Alias);
+
+        //    if (leaguesRoots == null)
+        //    {
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
+        //    }
+
+        //    List<IPublishedContent> leagueListContent = new List<IPublishedContent>();
+        //    foreach (var leagueRootId in leaguesRoots)
+        //    {
+        //        var leaguesContentById = Umbraco.Content(leagueRootId);
+        //        leagueListContent.AddRange(_controllerService.GetChildrensByAlias(leaguesContentById, UmbracoAliasConfiguration.League.Alias));
+        //    }
+
+        //    if (leagueListContent == null)
+        //    {
+        //        throw new HttpResponseException(HttpStatusCode.NotFound);
+        //    }
+
+        //    List<LeagueViewModel> allLeagues = new List<LeagueViewModel>();
+        //    foreach (var league in leagueListContent)
+        //    {
+        //        var k = _umbracoLeagueHelper.GetNodeDescendanModelsByDocumentTypeAlias(league.Id, UmbracoAliasConfiguration.Team.Alias);
+        //        allLeagues.Add(new LeagueViewModel()
+        //        {
+        //            Id = league.Id,
+        //            Name = league.Value(UmbracoAliasConfiguration.League.LeagueName).ToString(),
+        //            Teams = k as List<TeamViewModel>
+        //        });;
+        //    }
+
+        //    return allLeagues;
+        //}
+
+
         [HttpGet]
-        [Route("Leagues/")]
-        public IEnumerable<LeagueViewModel> GetAllLeagues()
+        [Route("GetLeagueById/{nodeId}")]
+        public LeagueViewModel GetLeagueById(int nodeId)
         {
-
-            // find Ids of root elements for League document type
-
-            var leaguesRoots = _controllerService.GetAllRootsId(UmbracoAliasConfiguration.League.Alias);
-
-            if (leaguesRoots == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            List<IPublishedContent> leagueListContent = new List<IPublishedContent>();
-            foreach (var leagueRootId in leaguesRoots)
-            {
-                var leaguesContentById = Umbraco.Content(leagueRootId);
-                leagueListContent.AddRange(_controllerService.GetChildrensByAlias(leaguesContentById, UmbracoAliasConfiguration.League.Alias));
-            }
-
-            if (leagueListContent == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound);
-            }
-
-            List<LeagueViewModel> allLeagues = new List<LeagueViewModel>();
-            foreach (var league in leagueListContent)
-            {
-                var k = _umbracoLeagueHelper.GetNodeDescendansByDocumentTypeAlias(league.Id, UmbracoAliasConfiguration.Team.Alias);
-                allLeagues.Add(new LeagueViewModel()
-                {
-                    Id = league.Id,
-                    Name = league.Value(UmbracoAliasConfiguration.League.LeagueName).ToString(),
-                    Teams = k as List<TeamViewModel>
-                });;
-            }
-
-            return allLeagues;
+            //int nodeID=2110; //Primara content
+            LeagueViewModel leagueModel = _umbracoLeagueHelper.GetNodeModelById(nodeId);
+            return leagueModel;
         }
+
+
         [HttpGet]
         [Route("Stub/")]
         public string GetStubString()

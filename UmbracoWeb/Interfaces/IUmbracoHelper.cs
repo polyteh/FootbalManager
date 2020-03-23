@@ -7,11 +7,17 @@ using Umbraco.Core.Models.PublishedContent;
 
 namespace UmbracoWeb.Interfaces
 {
-    public interface IUmbracoHelper<T,K>
+    public interface IUmbracoHelper<T>
         where T:class
-        where K:class
     {
-        IEnumerable<K> GetNodeDescendansByDocumentTypeAlias(int nodeId, string alias);
-        K MapUmbracoContentToModel(IPublishedContent content);
+        T GetNodeModelById(int nodeId);
+        /// <summary>
+        /// get descendants content by ancestor Id and descendans alias
+        /// </summary>
+        /// <param name="ancestorId">ancestor Id</param>
+        /// <param name="descendandsAlias">descendans alias</param>
+        /// <returns>return list of descendans models</returns>
+        IEnumerable<T> GetDescendantsContentByAncestorId(int ancestorId, string descendandsAlias);
+        IEnumerable<T> GetAllDescendantsByAlias(string descendandsAlias);
     }
 }

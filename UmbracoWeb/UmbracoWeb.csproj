@@ -350,6 +350,12 @@
     <Compile Include="Services\UmbracoHelper.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Services\UmbracoHelperPlayer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Services\UmbracoHelperTeam.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Services\UmbracoHelperLeague.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -12,7 +12,7 @@ using UmbracoWeb.Models;
 
 namespace UmbracoWeb.Services
 {
-    public class UmbracoHelperLeague : UmbracoHelper<LeagueViewModel, TeamViewModel>
+    public class UmbracoHelperLeague : UmbracoHelper<TeamViewModel>
 
     {
         public UmbracoHelperLeague(IContentService contentService, IContentTypeService contentTypeService, IMapper mapper,
@@ -21,14 +21,39 @@ namespace UmbracoWeb.Services
 
         }
 
+        //public override PlayerViewModel MapUmbracoDescendansContentToModel(IPublishedContent content)
+        //{
+        //    return new PlayerViewModel()
+        //    {
+        //        Id = content.Id,
+        //        Name = content.Value(UmbracoAliasConfiguration.Player.PlayerName).ToString(),
+        //        Age = Int32.Parse(content.Value(UmbracoAliasConfiguration.Player.PlayerAge).ToString())
+        //    };
+        //}
+
         public override TeamViewModel MapUmbracoContentToModel(IPublishedContent content)
         {
-            return new TeamViewModel()
-            {
-                Id = content.Id,
-                Name = content.Value(UmbracoAliasConfiguration.Team.TeamName).ToString(),
-                StadiumName = content.Value(UmbracoAliasConfiguration.Team.TeamStadium).ToString()
-            };
+            // prepare player list first
+            //var teamPlayersContent = _controllerService.GetChildrensByAlias(content, UmbracoAliasConfiguration.Player.Alias);
+            //List<PlayerViewModel> teamPlayersList = new List<PlayerViewModel>();
+            //foreach (var team in teamPlayersContent)
+            //{
+            //    teamPlayersList.Add(new TeamViewModel()
+            //    {
+            //        Id = team.Id,
+            //        Name = team.Value(UmbracoAliasConfiguration.Team.TeamName).ToString(),
+            //    }
+            //    );
+            //}
+
+            //return new LeagueViewModel()
+            //{
+            //    Id = content.Id,
+            //    Name = content.Value(UmbracoAliasConfiguration.League.LeagueName).ToString(),
+            //    Teams = teamPlayersList
+            //};
+            return null;
+
         }
     }
 }
