@@ -12,47 +12,25 @@ using UmbracoWeb.Models;
 
 namespace UmbracoWeb.Services
 {
-    public class UmbracoHelperLeague : UmbracoHelper<TeamViewModel>
+    public class UmbracoHelperLeague : UmbracoHelper<LeagueViewModel>
 
     {
+        private readonly IUmbracoHelper<TeamViewModel> _umbracoTeamHelper;
         public UmbracoHelperLeague(IContentService contentService, IContentTypeService contentTypeService, IMapper mapper,
-             IControllerHelper controllerServices) : base(contentService, contentTypeService, mapper, controllerServices)
+             IControllerHelper controllerServices, IUmbracoHelper<TeamViewModel> umbracoTeamHelper) : base(contentService, contentTypeService, mapper, controllerServices)
         {
-
+            _umbracoTeamHelper = umbracoTeamHelper;
         }
 
-        //public override PlayerViewModel MapUmbracoDescendansContentToModel(IPublishedContent content)
-        //{
-        //    return new PlayerViewModel()
-        //    {
-        //        Id = content.Id,
-        //        Name = content.Value(UmbracoAliasConfiguration.Player.PlayerName).ToString(),
-        //        Age = Int32.Parse(content.Value(UmbracoAliasConfiguration.Player.PlayerAge).ToString())
-        //    };
-        //}
-
-        public override TeamViewModel MapUmbracoContentToModel(IPublishedContent content)
+        public override LeagueViewModel MapUmbracoContentToModel(IPublishedContent content)
         {
-            // prepare player list first
-            //var teamPlayersContent = _controllerService.GetChildrensByAlias(content, UmbracoAliasConfiguration.Player.Alias);
-            //List<PlayerViewModel> teamPlayersList = new List<PlayerViewModel>();
-            //foreach (var team in teamPlayersContent)
-            //{
-            //    teamPlayersList.Add(new TeamViewModel()
-            //    {
-            //        Id = team.Id,
-            //        Name = team.Value(UmbracoAliasConfiguration.Team.TeamName).ToString(),
-            //    }
-            //    );
-            //}
-
-            //return new LeagueViewModel()
-            //{
-            //    Id = content.Id,
-            //    Name = content.Value(UmbracoAliasConfiguration.League.LeagueName).ToString(),
-            //    Teams = teamPlayersList
-            //};
-            return null;
+            var leagueTeams = _umbracoTeamHelper.GetDescendantsContentByAncestorId(content.Id, UmbracoAliasConfiguration.Team.Alias).ToList();
+            return new LeagueViewModel()
+            {
+                Id = content.Id,
+                Name = content.Value(UmbracoAliasConfiguration.League.LeagueName).ToString(),
+                Teams = leagueTeams
+            };
 
         }
     }

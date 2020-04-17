@@ -12,6 +12,7 @@ namespace UmbracoWeb.App_Start
         public APIMapperProfiler()
         {
             CreateMap<TeamViewModel, TeamNameViewModel>().ReverseMap();
+            CreateMap<LeagueViewModel, LeagueNameViewModel>().ReverseMap();
         }
     }
 }

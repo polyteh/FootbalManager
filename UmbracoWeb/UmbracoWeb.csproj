@@ -337,6 +337,7 @@
     <Compile Include="Filters\ActionCORSFilter.cs" />
     <Compile Include="Interfaces\IControllerHelper.cs" />
     <Compile Include="Interfaces\IUmbracoHelper.cs" />
+    <Compile Include="Models\LeagueNameViewModel.cs" />
     <Compile Include="Models\LeagueViewModel.cs" />
     <Compile Include="Models\Player.cs" />
     <Compile Include="Models\PlayerViewModel.cs" />
